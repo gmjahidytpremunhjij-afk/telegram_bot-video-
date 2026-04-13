@@ -2,16 +2,14 @@ import telebot
 import yt_dlp
 import os
 
-# TOKEN from Railway
-TOKEN = os.getenv("TOKEN")
-
+TOKEN = "YOUR_BOT_TOKEN"
 bot = telebot.TeleBot(TOKEN)
 
 # START COMMAND
 @bot.message_handler(commands=['start'])
 def start(message):
     name = message.from_user.first_name
-    bot.reply_to(message, f"""👋 আসসালামু আলাইকুম {name} স্যার!
+    text = f"""👋 আসসালামু আলাইকুম {name} স্যার!
 
 📥 আপনি এখান থেকে ডাউনলোড করতে পারবেন:
 ✔ TikTok
@@ -20,14 +18,13 @@ def start(message):
 ✔ Instagram
 
 🔗 শুধু ভিডিও লিংক পাঠান
-""")
 
-# ✅ LINK CHECK FUNCTION (FINAL FIX)
-def is_link(message):
-    return message.text is not None and message.text.startswith("http")
+👨‍💻 আমাকে তৈরি করেছে: @JAHIDVAI12
+"""
+    bot.reply_to(message, text)
 
-# ✅ DOWNLOAD HANDLER
-@bot.message_handler(func=is_link)
+# ONLY LINK HANDLER
+@bot.message_handler(func=lambda message: message.text and message.text.startswith("http"))
 def download_video(message):
     url = message.text
 
@@ -35,9 +32,10 @@ def download_video(message):
         bot.reply_to(message, "⏳ ডাউনলোড হচ্ছে...")
 
         ydl_opts = {
-            'format': 'best',
+            'format': 'best[ext=mp4]/best',
             'outtmpl': '%(id)s.%(ext)s',
-            'noplaylist': True
+            'noplaylist': True,
+            'quiet': True
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -49,8 +47,8 @@ def download_video(message):
 
         os.remove(file_name)
 
-    except Exception as e:
-        print(e)
+    except:
+        pass  # ❌ কোনো error হলেও কিছুই দেখাবে না (silent)
 
 # RUN BOT
 bot.infinity_polling()
