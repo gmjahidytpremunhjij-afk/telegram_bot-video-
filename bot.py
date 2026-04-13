@@ -2,8 +2,7 @@ import telebot
 import yt_dlp
 import os
 
-# TOKEN from Railway
-TOKEN = os.getenv("TOKEN")
+TOKEN = os.getenv("TOKEN")  # Railway use করলে এটা রাখো
 bot = telebot.TeleBot(TOKEN)
 
 # ================= START =================
@@ -12,14 +11,14 @@ def start(message):
     name = message.from_user.first_name
 
     text = f"""
-╔═━━━✦ 🤖 𝗕𝗢𝗧 𝗪𝗘𝗟𝗖𝗢𝗠𝗘 ✦━━━═╗
+╔═━━━✦ 🤖 BOT WELCOME ✦━━━═╗
 
 👋 Assalamu Alaikum {name}!
 
 🎬 Video Downloader Bot
 
 ━━━━━━━━━━━━━━━━━━
-📥 Supported:
+📥 Supported Sites:
 ➤ TikTok 🎵  
 ➤ Facebook 📘  
 ➤ YouTube ▶️  
@@ -29,13 +28,12 @@ def start(message):
 🔗 Just send your video link  
 ⚡ I’ll download it instantly!
 
-💎 Fast | Smooth | Free
+💎 Fast | Smooth | Free  
 
 👨‍💻 Owner: @JAHIDVAI12
 
 ╚═━━━✦ 🚀 ENJOY ✦━━━═╝
 """
-
     bot.reply_to(message, text, parse_mode="Markdown")
 
 # ================= LINK CHECK =================
@@ -51,10 +49,9 @@ def download_video(message):
         bot.reply_to(message, "⏳ Downloading...")
 
         ydl_opts = {
-            'format': 'best[filesize<50M]',
+            'format': 'best',
             'outtmpl': '%(id)s.%(ext)s',
             'noplaylist': True,
-            'quiet': True
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -62,6 +59,7 @@ def download_video(message):
             file_name = ydl.prepare_filename(info)
 
         if not os.path.exists(file_name):
+            bot.reply_to(message, "❌ File not found!")
             return
 
         with open(file_name, 'rb') as video:
@@ -71,6 +69,7 @@ def download_video(message):
 
     except Exception as e:
         print(e)
+        bot.reply_to(message, "❌ Download failed!")
 
 # ================= RUN =================
 print("🤖 Bot running...")
