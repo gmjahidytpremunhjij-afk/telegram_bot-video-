@@ -6,7 +6,7 @@ import os
 TOKEN = os.getenv("TOKEN")
 bot = telebot.TeleBot(TOKEN)
 
-# ================= START MESSAGE =================
+# ================= START =================
 @bot.message_handler(commands=['start'])
 def start(message):
     name = message.from_user.first_name
@@ -14,38 +14,29 @@ def start(message):
     text = f"""
 ╔═━━━✦ 🤖 𝗕𝗢𝗧 𝗪𝗘𝗟𝗖𝗢𝗠𝗘 ✦━━━═╗
 
-👋 𝗔𝘀𝘀𝗮𝗹𝗮𝗺𝘂 𝗔𝗹𝗮𝗶𝗸𝘂𝗺 {name}!
+👋 Assalamu Alaikum {name}!
 
-🎬 𝗩𝗶𝗱𝗲𝗼 𝗗𝗼𝘄𝗻𝗹𝗼𝗮𝗱𝗲𝗿 𝗕𝗼𝘁
+🎬 Video Downloader Bot
 
 ━━━━━━━━━━━━━━━━━━
-📥 𝗦𝘂𝗽𝗽𝗼𝗿𝘁𝗲𝗱 𝗦𝗶𝘁𝗲𝘀:
+📥 Supported:
 ➤ TikTok 🎵  
 ➤ Facebook 📘  
 ➤ YouTube ▶️  
 ➤ Instagram 📸  
 ━━━━━━━━━━━━━━━━━━
 
-🔗 𝗝𝘂𝘀𝘁 𝘀𝗲𝗻𝗱 𝘆𝗼𝘂𝗿 𝘃𝗶𝗱𝗲𝗼 𝗹𝗶𝗻𝗸  
-⚡ 𝗜’𝗹𝗹 𝗱𝗼𝘄𝗻𝗹𝗼𝗮𝗱 𝗶𝘁 𝗶𝗻𝘀𝘁𝗮𝗻𝘁𝗹𝘆!
+🔗 Just send your video link  
+⚡ I’ll download it instantly!
 
-💎 𝗙𝗮𝘀𝘁 | 𝗦𝗺𝗼𝗼𝘁𝗵 | 𝗙𝗿𝗲𝗲
+💎 Fast | Smooth | Free
 
-👨‍💻 𝗢𝘄𝗻𝗲𝗿: @JAHIDVAI12
+👨‍💻 Owner: @JAHIDVAI12
 
-╚═━━━✦ 🚀 𝗘𝗡𝗝𝗢𝗬 ✦━━━═╝
+╚═━━━✦ 🚀 ENJOY ✦━━━═╝
 """
 
     bot.reply_to(message, text, parse_mode="Markdown")
-
-# ================= HELP =================
-@bot.message_handler(commands=['help'])
-def help_cmd(message):
-    bot.reply_to(
-        message,
-        "📌 শুধু ভিডিও লিংক পাঠান\n🎬 আমি ডাউনলোড করে দিবো 😎",
-        parse_mode="Markdown"
-    )
 
 # ================= LINK CHECK =================
 def is_link(message):
@@ -57,7 +48,7 @@ def download_video(message):
     url = message.text
 
     try:
-        bot.reply_to(message, "⏳ ডাউনলোড হচ্ছে...")
+        bot.reply_to(message, "⏳ Downloading...")
 
         ydl_opts = {
             'format': 'best[filesize<50M]',
@@ -71,7 +62,6 @@ def download_video(message):
             file_name = ydl.prepare_filename(info)
 
         if not os.path.exists(file_name):
-            bot.reply_to(message, "❌ ফাইল পাওয়া যায়নি!")
             return
 
         with open(file_name, 'rb') as video:
@@ -81,15 +71,6 @@ def download_video(message):
 
     except Exception as e:
         print(e)
-        bot.reply_to(message, "❌ ডাউনলোড করতে সমস্যা হয়েছে!")
-
-# ================= WRONG INPUT =================
-@bot.message_handler(func=lambda m: True)
-def wrong(message):
-    bot.reply_to(
-        message,
-        "❌ শুধু ভিডিও লিংক পাঠান!\n🔗 অন্য কিছু দিলে কাজ করবে না 😅"
-    )
 
 # ================= RUN =================
 print("🤖 Bot running...")
