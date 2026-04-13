@@ -8,11 +8,32 @@ bot = telebot.TeleBot(TOKEN)
 # START COMMAND
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.reply_to(message,
-        "👋 আসসালামু আলাইকুম!\n\n"
-        "🎬 ভিডিও ডাউনলোড করতে লিংক পাঠান:\n"
-        "✔ TikTok\n✔ Facebook\n✔ YouTube\n✔ Instagram"
-    )
+    name = message.from_user.first_name
+
+    text = f"""
+╔═══❖ 🤖 WELCOME ❖═══╗
+
+👋 আসসালামু আলাইকুম {name} স্যার!
+
+🎬 *Video Downloader Bot*
+
+━━━━━━━━━━━━━━━
+📥 Supported:
+✔ TikTok
+✔ Facebook
+✔ YouTube
+✔ Instagram
+━━━━━━━━━━━━━━━
+
+🔗 শুধু ভিডিও লিংক পাঠান  
+⏬ আমি ডাউনলোড করে দিবো!
+
+👨‍💻 Created by: @JAHIDVAI12
+
+╚════════════════════╝
+"""
+
+    bot.reply_to(message, text, parse_mode="Markdown")
 
 # LINK CHECK
 def is_link(message):
@@ -24,7 +45,7 @@ def download_video(message):
     url = message.text
 
     try:
-        bot.reply_to(message, "⏬ ডাউনলোড হচ্ছে...")
+        bot.reply_to(message, "⏳ ডাউনলোড হচ্ছে...")
 
         ydl_opts = {
             'format': 'best[filesize<50M]',
@@ -50,6 +71,11 @@ def download_video(message):
         print(e)
         bot.reply_to(message, "❌ ডাউনলোড করতে সমস্যা হয়েছে!")
 
-# RUN
+# WRONG MESSAGE
+@bot.message_handler(func=lambda m: True)
+def wrong(message):
+    bot.reply_to(message, "❌ শুধু ভিডিও লিংক পাঠান!")
+
+# RUN BOT
 print("🤖 Bot running...")
 bot.infinity_polling()
