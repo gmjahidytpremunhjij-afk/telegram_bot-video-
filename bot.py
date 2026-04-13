@@ -2,7 +2,7 @@ import telebot
 import yt_dlp
 import os
 
-TOKEN = os.getenv("TOKEN")  # Railway use করলে এটা রাখো
+TOKEN = os.getenv("TOKEN")
 bot = telebot.TeleBot(TOKEN)
 
 # ================= START =================
@@ -18,7 +18,7 @@ def start(message):
 🎬 Video Downloader Bot
 
 ━━━━━━━━━━━━━━━━━━
-📥 Supported Sites:
+📥 Supported:
 ➤ TikTok 🎵  
 ➤ Facebook 📘  
 ➤ YouTube ▶️  
@@ -43,7 +43,7 @@ def is_link(message):
 # ================= DOWNLOAD =================
 @bot.message_handler(func=is_link)
 def download_video(message):
-    url = message.text
+    url = message.text.strip()
 
     try:
         bot.reply_to(message, "⏳ Downloading...")
@@ -52,6 +52,10 @@ def download_video(message):
             'format': 'best',
             'outtmpl': '%(id)s.%(ext)s',
             'noplaylist': True,
+            'quiet': False,
+            'http_headers': {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+            }
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
